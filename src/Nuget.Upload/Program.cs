@@ -22,7 +22,6 @@ namespace NuGet.Upload
         static async Task MainAsync(string[] args)
         {
             var config = new ConfigurationBuilder()
-                                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                                 .AddJsonFile("appsettings.json")
                                 .Build();
 
@@ -34,6 +33,7 @@ namespace NuGet.Upload
             {
                 switch (args[0])
                 {
+                    // Load dlls to target folder
                     case "load":
                         {
                             if (args.Count() >= 2)
@@ -57,6 +57,18 @@ namespace NuGet.Upload
                             {
                                 Console.WriteLine(ioe.Message);
                             }
+                        }
+                        break;
+                    // Show info about package, includind dependencies
+                    case "info":
+                        {
+                            if (args.Count() >= 2)
+                                packageID = args[1];
+                            if (args.Count() == 3)
+                                packageVersionID = args[2];
+                            var uploader = new NugetUploader(options, s => Console.WriteLine(s));
+                            await uploader.ShowInfo(packageID, packageVersionID);
+
                         }
                         break;
                     default:

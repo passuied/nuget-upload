@@ -8,6 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using NuGet.Protocol.Core.Types;
+using Microsoft.TeamFoundation.VersionControl.Client;
+using Microsoft.TeamFoundation.Client;
 
 namespace NuGet.Upload.Core
 {
@@ -61,28 +64,72 @@ namespace NuGet.Upload.Core
         private async Task CopyFileIfNewer(string filePath, string targetFolder)
         {
             var targetLocation = Path.Combine(targetFolder, GetFilename(filePath));
+            var newFileVersion = FileVersionInfo.GetVersionInfo(filePath).FileVersion;
+
             if (File.Exists(targetLocation))
             {
                 var oldFileVersion = FileVersionInfo.GetVersionInfo(targetLocation).FileVersion;
-                var newFileVersion = FileVersionInfo.GetVersionInfo(filePath).FileVersion;
 
                 if (oldFileVersion != newFileVersion)
-                    await CopyFileAsync(filePath, targetFolder);
+                    await CheckoutAndCopyFileAsync(filePath, targetFolder, newFileVersion);
                 else
                     StandardOutputWriter($"Skipping copy of {GetFilename(filePath)} as version {newFileVersion} already in target folder.");
             }
             else
-                await CopyFileAsync(filePath, targetFolder);
+                await CopyFileAndTfsAddAsync(filePath, targetFolder, newFileVersion);
 
         }
 
-        private async Task CopyFileAsync(string filePath, string targetFolder)
+        public async Task ShowInfo(string packageID, string packageVersionID="")
+        {
+            await Task.Run(() => this.StandardOutputWriter("Coming soon..."));
+        }
+
+        private async Task CheckoutAndCopyFileAsync(string filePath, string targetFolder, string newVersion)
+        {
+            var targetLocation = Path.Combine(targetFolder, GetFilename(filePath));
+
+            var workspaceInfo = Workstation.Current.GetLocalWorkspaceInfo(targetLocation);
+            if (workspaceInfo != null)
+            {
+                using (var server = new TfsTeamProjectCollection(workspaceInfo.ServerUri))
+                {
+                    var workspace = workspaceInfo.GetWorkspace(server);
+                    workspace.PendEdit(targetLocation);
+                    await CopyFileAsync(filePath, targetFolder, newVersion);
+                }
+            }
+            else
+            {
+                await CopyFileAsync(filePath, targetFolder, newVersion);
+            }
+        }
+
+        private async Task CopyFileAndTfsAddAsync(string filePath, string targetFolder, string newVersion)
+        {
+            var targetLocation = Path.Combine(targetFolder, GetFilename(filePath));
+            await CopyFileAsync(filePath, targetFolder, newVersion);
+
+            var workspaceInfo = Workstation.Current.GetLocalWorkspaceInfo(targetFolder);
+            if (workspaceInfo != null)
+            {
+                using (var server = new TfsTeamProjectCollection(workspaceInfo.ServerUri))
+                {
+                    var workspace = workspaceInfo.GetWorkspace(server);
+                    workspace.PendAdd(targetLocation);
+                    
+                }
+            }
+            
+        }
+
+        private async Task CopyFileAsync(string filePath, string targetFolder, string newVersion)
         {
             using (FileStream sourceStream = File.Open(filePath, FileMode.Open))
             {
                 using (FileStream destinationStream = File.Open(Path.Combine(targetFolder, GetFilename(filePath)), FileMode.OpenOrCreate, FileAccess.Write))
                 {
-                    StandardOutputWriter($"Copying {GetFilename(filePath)} to folder: {targetFolder}");
+                    StandardOutputWriter($"Copying {FormatPackageAndVersion(GetFilename(filePath), newVersion)} to folder: {targetFolder}");
                     await sourceStream.CopyToAsync(destinationStream);
                 }
             }
@@ -146,8 +193,7 @@ namespace NuGet.Upload.Core
                 if (Directory.Exists(libFolder))
                 {
                     string fwFolder = FindFrameworkFolder(libFolder);
-                    var files = Directory.GetFiles(fwFolder, "*.dll").ToList();
-                    files.AddRange(Directory.GetFiles(fwFolder, "*.xml"));
+                    var files = Directory.GetFiles(fwFolder, "*.*").ToList();
                     dic.Add(GetFilename(subFolder), files);
                 }
             }
@@ -205,5 +251,6 @@ namespace NuGet.Upload.Core
         {
             return filepath.Substring(filepath.LastIndexOf('\\') + 1);
         }
+
     }
 }
