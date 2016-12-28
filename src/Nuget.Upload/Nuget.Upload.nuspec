@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+  For more info on this file format visit http://docs.nuget.org/docs/reference/nuspec-reference.
+-->
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">  
+  <metadata>
+    <id>Nuget.Upload</id>
+    <version>$version$</version>
+    <authors>Patrick Assuied</authors>
+    <summary>Nuget Upload tool</summary>
+    <description>A way to easily upload a given Nuget's dlls and dependencies to current location</description>
+    <!--<projectUrl>http://xunit.codeplex.com/</projectUrl>-->
+    <licenseUrl>https://cornerstoneondemand.com</licenseUrl>
+  </metadata>
+  <dependencies>
+    <dependency id="nuget.commandline" version="3.4.3" />
+  </dependencies>
+</package>
