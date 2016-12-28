@@ -1,6 +1,6 @@
 ﻿using Cornerstone.Configuration;
-using Nuget.Upload.Configuration;
-using Nuget.Upload.Core;
+using NuGet.Upload.Configuration;
+using NuGet.Upload.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nuget.Upload
+namespace NuGet.Upload
 {
     class Program
     {
@@ -43,20 +43,19 @@ namespace Nuget.Upload
 
                             try
                             {
-                                var uploader = new NugetUploader(options);
+                                var uploader = new NugetUploader(options, s => Console.WriteLine(s));
                                 await uploader.Upload(Directory.GetCurrentDirectory(), packageID, packageVersionID);
-                                Console.WriteLine($"Package '{packageID}' and dependencies successfully uploaded!");
+                                Console.WriteLine();
+                                Console.WriteLine($"Package '{NugetUploader.FormatPackageAndVersion(packageID, packageVersionID)}' and dependencies successfully uploaded!");
                                 Console.ReadLine();
                             }
                             catch (ArgumentException ae)
                             {
                                 Console.WriteLine(ae.Message);
-                                WriteHelp();
                             }
                             catch (InvalidOperationException ioe)
                             {
                                 Console.WriteLine(ioe.Message);
-                                WriteHelp();
                             }
                         }
                         break;
@@ -72,7 +71,7 @@ namespace Nuget.Upload
 
         static void WriteHelp()
         {
-            Console.WriteLine($"Usage: nuget-upload.exe load <NugetPackageID> [<NugetPackageVersionID>]");
+            Console.WriteLine($"Usage: nuget-upload.exe load <NuGetPackageID> [<NuGetPackageVersionID>]");
         }
 
     }

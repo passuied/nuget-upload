@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuget.Upload", "src\Nuget.Upload\Nuget.Upload.csproj", "{ED5803ED-58AC-49EA-B05B-1A5489AC4488}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Upload", "src\Nuget.Upload\NuGet.Upload.csproj", "{ED5803ED-58AC-49EA-B05B-1A5489AC4488}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuget.Upload.Tests", "src\Nuget.Upload.Tests\Nuget.Upload.Tests.csproj", "{4BE890D7-9E34-4B48-8161-31A3332D8F69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.Upload.Tests", "src\Nuget.Upload.Tests\NuGet.Upload.Tests.csproj", "{4BE890D7-9E34-4B48-8161-31A3332D8F69}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A7E1563F-7644-4A95-B18A-0595BE51A383}"
 	ProjectSection(SolutionItems) = preProject

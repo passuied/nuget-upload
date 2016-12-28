@@ -7,7 +7,7 @@
     <ProjectGuid>{ED5803ED-58AC-49EA-B05B-1A5489AC4488}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nuget.Upload</RootNamespace>
+    <RootNamespace>NuGet.Upload</RootNamespace>
     <AssemblyName>nuget-upload</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

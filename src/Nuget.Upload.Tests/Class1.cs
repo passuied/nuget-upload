@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nuget.Upload.Tests
+namespace NuGet.Upload.Tests
 {
     public class Class1
     {

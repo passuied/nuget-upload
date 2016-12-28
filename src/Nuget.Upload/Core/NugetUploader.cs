@@ -1,4 +1,4 @@
-﻿using Nuget.Upload.Configuration;
+﻿using NuGet.Upload.Configuration;
 using NuGet.Frameworks;
 using System;
 using System.Collections.Generic;
@@ -9,16 +9,18 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Nuget.Upload.Core
+namespace NuGet.Upload.Core
 {
     public class NugetUploader
     {
-        public NugetUploader(NugetUploadOptions options)
+        public NugetUploader(NugetUploadOptions options, Action<string> standardOutputWriter)
         {
             this.Options = options;
+            this.StandardOutputWriter = standardOutputWriter;
         }
 
         public NugetUploadOptions Options { get; private set; }
+        public Action<string> StandardOutputWriter { get; private set; }
 
         public async Task Upload(string targetUploadFolder, string packageID, string packageVersionID = "")
         {
@@ -40,7 +42,7 @@ namespace Nuget.Upload.Core
 
         }
 
-        private static async Task CopyToTargetFolders(string targetUploadFolder, IDictionary<string, IEnumerable<string>> filesToUpload)
+        private async Task CopyToTargetFolders(string targetUploadFolder, IDictionary<string, IEnumerable<string>> filesToUpload)
         {
             foreach (var targetFolder in filesToUpload.Keys)
             {
@@ -50,18 +52,37 @@ namespace Nuget.Upload.Core
 
                 foreach (var file in filesToUpload[targetFolder])
                 {
-                    await CopyFileAsync(file, targetPath);
+                    await CopyFileIfNewer(file, targetPath);
                 }
 
             }
         }
 
-        private static async Task CopyFileAsync(string filename, string targetFolder)
+        private async Task CopyFileIfNewer(string filePath, string targetFolder)
         {
-            using (FileStream sourceStream = File.Open(filename, FileMode.Open))
+            var targetLocation = Path.Combine(targetFolder, GetFilename(filePath));
+            if (File.Exists(targetLocation))
             {
-                using (FileStream destinationStream = File.Create(targetFolder + filename.Substring(filename.LastIndexOf('\\'))))
+                var oldFileVersion = FileVersionInfo.GetVersionInfo(targetLocation).FileVersion;
+                var newFileVersion = FileVersionInfo.GetVersionInfo(filePath).FileVersion;
+
+                if (oldFileVersion != newFileVersion)
+                    await CopyFileAsync(filePath, targetFolder);
+                else
+                    StandardOutputWriter($"Skipping copy of {GetFilename(filePath)} as version {newFileVersion} already in target folder.");
+            }
+            else
+                await CopyFileAsync(filePath, targetFolder);
+
+        }
+
+        private async Task CopyFileAsync(string filePath, string targetFolder)
+        {
+            using (FileStream sourceStream = File.Open(filePath, FileMode.Open))
+            {
+                using (FileStream destinationStream = File.Open(Path.Combine(targetFolder, GetFilename(filePath)), FileMode.OpenOrCreate, FileAccess.Write))
                 {
+                    StandardOutputWriter($"Copying {GetFilename(filePath)} to folder: {targetFolder}");
                     await sourceStream.CopyToAsync(destinationStream);
                 }
             }
@@ -116,7 +137,7 @@ namespace Nuget.Upload.Core
             return matches;
         }
 
-        private  IDictionary<string, IEnumerable<string>> GetLibDllsByPackageID(string stagingFolder)
+        private IDictionary<string, IEnumerable<string>> GetLibDllsByPackageID(string stagingFolder)
         {
             var dic = new Dictionary<string, IEnumerable<string>>();
             foreach (var subFolder in Directory.EnumerateDirectories(stagingFolder))
@@ -125,7 +146,9 @@ namespace Nuget.Upload.Core
                 if (Directory.Exists(libFolder))
                 {
                     string fwFolder = FindFrameworkFolder(libFolder);
-                    dic.Add(subFolder.Substring(subFolder.LastIndexOf('\\')+1), Directory.GetFiles(fwFolder, "*.*"));
+                    var files = Directory.GetFiles(fwFolder, "*.dll").ToList();
+                    files.AddRange(Directory.GetFiles(fwFolder, "*.xml"));
+                    dic.Add(GetFilename(subFolder), files);
                 }
             }
 
@@ -135,32 +158,52 @@ namespace Nuget.Upload.Core
         private string FindFrameworkFolder(string libFolder)
         {
             var fwFolders = Directory.EnumerateDirectories(libFolder)
-                                .Select(f => f.Substring(f.LastIndexOf('\\')+1))
+                                .Select(f => GetFilename(f))
                                 .ToArray();
 
-            var fws = fwFolders
-                        .Select(f => NuGetFramework.ParseFolder(f))
-                        .ToArray();
-
+            
             var targetFw = NuGetFramework.ParseFolder(this.Options.TargetFramework);
 
             var nearest = NuGetFrameworkUtility.GetNearest(
-                fwFolders, 
+                fwFolders,
                 targetFw,
                 f => NuGetFramework.ParseFolder(f)
                 );
 
+            if (nearest == null)
+                throw new InvalidOperationException($"Couldn't find matching framework for library {libFolder} and target framework={this.Options.TargetFramework}.");
             return Path.Combine(libFolder, nearest);
         }
 
-        private static void RunNuget(string packageID, string packageVersionID, string stagingFolder)
+        private void RunNuget(string packageID, string packageVersionID, string stagingFolder)
         {
+            this.StandardOutputWriter($"Downloading Package {FormatPackageAndVersion(packageID, packageVersionID)} and dependencies...");
             Process p = new Process();
             p.StartInfo.FileName = "nuget.exe";
             p.StartInfo.WorkingDirectory = stagingFolder;
-            p.StartInfo.Arguments = $" install {packageID} {packageVersionID}";
+            var versionOption = !string.IsNullOrEmpty(packageVersionID) ? $" -Version {packageVersionID}" : string.Empty;
+            p.StartInfo.Arguments = $" install {packageID}{versionOption}";
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.RedirectStandardOutput = true;
             p.Start();
+            this.StandardOutputWriter(p.StandardOutput.ReadToEnd());
+
             p.WaitForExit();
+            if (p.ExitCode != 0)
+                throw new ArgumentException($"Unable to download {FormatPackageAndVersion(packageID, packageVersionID)}...");
+        }
+
+        public static string FormatPackageAndVersion(string packageID, string packageVersionID)
+        {
+            if (!string.IsNullOrEmpty(packageVersionID))
+                return $"{packageID} v{packageVersionID}";
+            else
+                return packageID;
+        }
+
+        private static string GetFilename(string filepath)
+        {
+            return filepath.Substring(filepath.LastIndexOf('\\') + 1);
         }
     }
 }

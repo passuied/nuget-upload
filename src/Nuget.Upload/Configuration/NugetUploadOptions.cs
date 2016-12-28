@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nuget.Upload.Configuration
+namespace NuGet.Upload.Configuration
 {
     public class NugetUploadOptions
     {
