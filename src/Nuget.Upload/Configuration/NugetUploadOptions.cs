@@ -10,14 +10,14 @@ namespace Cornerstone.NuGet.Upload.Configuration
     {
         public NuGetUploadOptions()
         {
-            this.NugetConfigPath = "%APPDATA%\\NuGet\\NuGet.config";
+            DeleteStagingFolder = true;
         }
 
         public string TempFolder { get; set; }
 
         public string TargetFramework { get; set; }
 
-        public string NugetConfigPath { get; set; }
+        public bool DeleteStagingFolder { get; set; }
 
         public IEnumerable<NuGetUploadRule> UploadRules { get; set; }
 

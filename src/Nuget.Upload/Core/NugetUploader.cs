@@ -62,7 +62,8 @@ namespace Cornerstone.NuGet.Upload.Core
             await CopyToTargetFolders(targetUploadFolder, filesToUpload);
 
             // Finally delete staging folder
-            Directory.Delete(_stagingFolder, true);
+            if (this.Options.DeleteStagingFolder)
+                Directory.Delete(_stagingFolder, true);
 
         }
 

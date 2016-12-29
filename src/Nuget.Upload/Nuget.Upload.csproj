@@ -204,9 +204,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="appsettings.json">
+    <Content Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="Nuget.Upload.nuspec" />
     <None Include="packages.config" />
     <None Include="tools\chocolateyInstall.ps1" />
