@@ -1,6 +1,6 @@
 ﻿using Cornerstone.Configuration;
-using NuGet.Upload.Configuration;
-using NuGet.Upload.Core;
+using Cornerstone.NuGet.Upload.Configuration;
+using Cornerstone.NuGet.Upload.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NuGet.Upload
+namespace Cornerstone.Nuget.Upload
 {
     class Program
     {
@@ -25,7 +25,7 @@ namespace NuGet.Upload
                                 .AddJsonFile("appsettings.json")
                                 .Build();
 
-            var options = config.GetSection("NugetUpload").Get<NugetUploadOptions>();
+            var options = config.GetSection("NugetUpload").Get<NuGetUploadOptions>();
 
             string packageID = string.Empty;
             string packageVersionID = string.Empty;

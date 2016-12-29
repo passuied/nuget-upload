@@ -7,7 +7,7 @@
     <ProjectGuid>{ED5803ED-58AC-49EA-B05B-1A5489AC4488}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NuGet.Upload</RootNamespace>
+    <RootNamespace>Cornerstone.NuGet.Upload</RootNamespace>
     <AssemblyName>nuget-upload</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -91,8 +91,8 @@
       <HintPath>..\..\packages\NuGet.ContentModel.3.5.0\lib\net45\NuGet.ContentModel.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NuGet.Core, Version=2.14.0.832, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NuGet.Core.2.14.0\lib\net40-Client\NuGet.Core.dll</HintPath>
+    <Reference Include="NuGet.Core, Version=2.13.0.824, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NuGet.Core.2.13.0\lib\net40-Client\NuGet.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NuGet.DependencyResolver, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -192,9 +192,13 @@
     <Compile Include="..\..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Configuration\NugetUploadOptions.cs" />
-    <Compile Include="Configuration\NugetUploadRule.cs" />
+    <Compile Include="Configuration\NuGetUploadOptions.cs" />
+    <Compile Include="Configuration\NuGetUploadRule.cs" />
+    <Compile Include="Core\MachineWideSettings.cs" />
+    <Compile Include="Core\NuGetProjectContext.cs" />
     <Compile Include="Core\NugetUploader.cs" />
+    <Compile Include="Core\NugetUploaderSourceRepositoryProvider.cs" />
+    <Compile Include="Core\StandardOutputLogger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

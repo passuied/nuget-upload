@@ -1,5 +1,6 @@
-﻿using NuGet.Upload.Configuration;
+﻿using Cornerstone.NuGet.Upload.Configuration;
 using NuGet.Frameworks;
+using NuGet.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,37 +12,57 @@ using System.Threading.Tasks;
 using NuGet.Protocol.Core.Types;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Microsoft.TeamFoundation.Client;
+using NuGet.Protocol;
+using NuGet.PackageManagement;
+using NuGet.Resolver;
+using NuGet.Versioning;
+using NuGet.ProjectManagement;
+using NuGet.Packaging;
+using System.Threading;
+using NuGet.Packaging.Core;
 
-namespace NuGet.Upload.Core
+namespace Cornerstone.NuGet.Upload.Core
 {
     public class NugetUploader
     {
-        public NugetUploader(NugetUploadOptions options, Action<string> standardOutputWriter)
+        private string _stagingFolder;
+
+        public NugetUploader(NuGetUploadOptions options, Action<string> standardOutputWriter)
         {
             this.Options = options;
             this.StandardOutputWriter = standardOutputWriter;
+            this._stagingFolder = $"{Options.TempFolder}{Guid.NewGuid()}\\";
+
+            // Attempt to use NuGet API but very tedious... code below not really in use
+            this.Settings = global::NuGet.Configuration.Settings.LoadDefaultSettings(_stagingFolder, configFileName: null, machineWideSettings: new MachineWideSettings());
+            this.SourceProvider = new PackageSourceProvider(this.Settings);
+            this.Logger = new StandardOutputLogger(StandardOutputWriter);
+
+
         }
 
-        public NugetUploadOptions Options { get; private set; }
+        public NuGetUploadOptions Options { get; private set; }
         public Action<string> StandardOutputWriter { get; private set; }
+        public ISettings Settings { get; private set; }
+        public PackageSourceProvider SourceProvider { get; private set; }
+        public StandardOutputLogger Logger { get; private set; }
 
         public async Task Upload(string targetUploadFolder, string packageID, string packageVersionID = "")
         {
             if (string.IsNullOrWhiteSpace(packageID)) throw new ArgumentNullException(nameof(packageID));
 
             // create staging folder
-            var stagingFolder = $"{Options.TempFolder}{Guid.NewGuid()}\\";
-            Directory.CreateDirectory(stagingFolder);
-            RunNuget(packageID, packageVersionID, stagingFolder);
+            Directory.CreateDirectory(_stagingFolder);
+            RunNuget(packageID, packageVersionID, _stagingFolder);
 
             // Now apply rules on staging folder where Nuget and dependencies just downloaded
-            IDictionary<string, IEnumerable<string>> filesToUpload = GetLibDllsbyTargetFolder(stagingFolder);
+            IDictionary<string, IEnumerable<string>> filesToUpload = GetLibDllsbyTargetFolder(_stagingFolder);
 
             // Finally copy each dll to the correct folder
             await CopyToTargetFolders(targetUploadFolder, filesToUpload);
 
             // Finally delete staging folder
-            Directory.Delete(stagingFolder, true);
+            Directory.Delete(_stagingFolder, true);
 
         }
 
@@ -57,7 +78,6 @@ namespace NuGet.Upload.Core
                 {
                     await CopyFileIfNewer(file, targetPath);
                 }
-
             }
         }
 
@@ -80,8 +100,51 @@ namespace NuGet.Upload.Core
 
         }
 
-        public async Task ShowInfo(string packageID, string packageVersionID="")
+       
+
+        public async Task ShowInfo(string packageID, string packageVersionID = "")
         {
+            // Attempt to use the NuGet API... Very complex :(
+            //var sourceRepoProvider = new NugetUploaderSourceRepositoryProvider(this.SourceProvider);
+
+            //var packageManager = new NuGetPackageManager(sourceRepoProvider, this.Settings, _stagingFolder);
+
+            //var resolutionContext = new ResolutionContext(
+            //   DependencyBehavior.Lowest,
+            //   includePrelease: false,
+            //   includeUnlisted: true,
+            //   versionConstraints: VersionConstraints.None);
+
+            //var folderProject = new FolderNuGetProject(
+            //    this._stagingFolder,
+            //    new PackagePathResolver(_stagingFolder));
+
+
+            //var version = !string.IsNullOrEmpty(packageVersionID) ? new NuGetVersion(packageVersionID) : null;
+            //if (version == null)
+            //{
+            //    version = await NuGetPackageManager.GetLatestVersionAsync(
+            //        packageID,
+            //        NuGetFramework.ParseFolder(this.Options.TargetFramework),
+            //        resolutionContext,
+            //        sourceRepoProvider.GetRepositories(),
+            //        this.Logger,
+            //        CancellationToken.None
+
+            //        );
+            //}
+
+            //var primaryRepositories = packageSources.Select(sourceRepositoryProvider.CreateRepository);
+
+
+            //packageManager.PreviewInstallPackageAsync(
+            //    folderProject,
+            //    new PackageIdentity(packageID, version),
+            //    resolutionContext,
+            //    new NuGetProjectContext(this.Logger),
+            //    CancellationToken.None);
+            
+
             await Task.Run(() => this.StandardOutputWriter("Coming soon..."));
         }
 
@@ -117,10 +180,10 @@ namespace NuGet.Upload.Core
                 {
                     var workspace = workspaceInfo.GetWorkspace(server);
                     workspace.PendAdd(targetLocation);
-                    
+
                 }
             }
-            
+
         }
 
         private async Task CopyFileAsync(string filePath, string targetFolder, string newVersion)
@@ -173,7 +236,7 @@ namespace NuGet.Upload.Core
                        + "$";
         }
 
-        private static IEnumerable<string> FindMatchingPackageIds(NugetUploadRule rule, IDictionary<string, IEnumerable<string>> dllsByPackageId)
+        private static IEnumerable<string> FindMatchingPackageIds(NuGetUploadRule rule, IDictionary<string, IEnumerable<string>> dllsByPackageId)
         {
             var regex = new Regex(WildcardToRegex(rule.Pattern));
 
@@ -207,7 +270,7 @@ namespace NuGet.Upload.Core
                                 .Select(f => GetFilename(f))
                                 .ToArray();
 
-            
+
             var targetFw = NuGetFramework.ParseFolder(this.Options.TargetFramework);
 
             var nearest = NuGetFrameworkUtility.GetNearest(

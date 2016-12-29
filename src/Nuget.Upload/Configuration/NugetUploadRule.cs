@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NuGet.Upload.Configuration
+namespace Cornerstone.NuGet.Upload.Configuration
 {
-    public class NugetUploadRule
+    public class NuGetUploadRule
     {
         public string Pattern { get; set; }
         public string TargetFolder { get; set; }

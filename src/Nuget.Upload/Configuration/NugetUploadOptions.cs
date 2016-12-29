@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NuGet.Upload.Configuration
+namespace Cornerstone.NuGet.Upload.Configuration
 {
-    public class NugetUploadOptions
+    public class NuGetUploadOptions
     {
-        public NugetUploadOptions()
+        public NuGetUploadOptions()
         {
             this.NugetConfigPath = "%APPDATA%\\NuGet\\NuGet.config";
         }
@@ -19,7 +19,7 @@ namespace NuGet.Upload.Configuration
 
         public string NugetConfigPath { get; set; }
 
-        public IEnumerable<NugetUploadRule> UploadRules { get; set; }
+        public IEnumerable<NuGetUploadRule> UploadRules { get; set; }
 
     }
 }
