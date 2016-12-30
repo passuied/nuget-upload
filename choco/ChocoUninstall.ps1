@@ -1,1 +1,1 @@
-choco uninstall nugetupload
+choco uninstall nugetupload -y

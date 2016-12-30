@@ -1,1 +1,1 @@
-choco install nugetupload -fdv -s "$pwd;https://chocolatey.org/api/v2/"
+choco install nugetupload -fdv -s "$pwd;https://chocolatey.org/api/v2/" -y
