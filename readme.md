@@ -31,11 +31,11 @@ Installation is easy via [Chocolatey](https://chocolatey.org/):
 ```pshell
 PS> choco install Cornerstone.NuGetUpload
 ```
-   * This will install the `nuget-upload` command line tool to the folder `%PROGRAMFILES(x86)\Cornerstone\NuGetUpload`
+   * This will install the `nuget-upload` command line tool to the folder `%PROGRAMFILES(x86)%\Cornerstone\NuGetUpload`
    * It will also add this folder to the Environment `PATH` variable 
 
 ## Configuration
-- Default configuration can be overriden by editing the `appsettings.json` file located in the `%PROGRAMFILES(x86)\Cornerstone\NuGetUpload` application folder
+- Default configuration can be overriden by editing the `appsettings.json` file located in the `%PROGRAMFILES(x86)%\Cornerstone\NuGetUpload` application folder
 - Format is as follows:
 ```json
 {
