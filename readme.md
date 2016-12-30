@@ -29,7 +29,7 @@ Installation is easy via [Chocolatey](https://chocolatey.org/):
    * Follow instructions [here](https://chocolatey.org/install)
 1. Open an admin powershell window:
 ```pshell
-PS> choco install Cornerstone.NuGetUpload
+PS> choco install nugetupload
 ```
    * This will install the `nuget-upload` command line tool to the folder `%PROGRAMFILES(x86)%\Cornerstone\NuGetUpload`
    * It will also add this folder to the Environment `PATH` variable 

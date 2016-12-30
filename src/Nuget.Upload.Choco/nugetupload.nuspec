@@ -4,14 +4,19 @@
 -->
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">  
   <metadata>
-    <id>Cornerstone.NuGetUpload</id>
+    <id>nugetupload</id>
     <version>$version$</version>
     <authors>Patrick Assuied</authors>
-    <summary>Nuget Upload tool</summary>
-    <description>A way to easily upload a given Nuget's dlls and dependencies to current location</description>
+    <title>NuGet Upload tool</title>
+    <summary>NuGet Upload tool</summary>
+    <description>A command line tool allowing easy upload of a given Nuget's and dependencies' dlls to current location and subfolders.</description>
     <projectUrl>https://github.com/passuied/nuget-upload</projectUrl>
+    <packageSourceUrl>https://github.com/passuied/nuget-upload</packageSourceUrl>
     <licenseUrl>https://www.cornerstoneondemand.com</licenseUrl>
-    <tags>nuget upload monolith chocolatey</tags>
+    <tags>nuget upload dll monolith admin</tags>
+    <releaseNotes>
+      Documentation and release notes can be found at https://github.com/passuied/nuget-upload
+    </releaseNotes>
   <dependencies>
     <dependency id="nuget.commandline" version="3.4.3" />
   </dependencies>

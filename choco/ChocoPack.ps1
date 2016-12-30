@@ -3,7 +3,7 @@ param(
 )
 
 
-choco pack ../src/Nuget.Upload.Choco/Cornerstone.NuGetUpload.nuspec --version=$version
+choco pack ../src/Nuget.Upload.Choco/nugetupload.nuspec --version=$version
 
 
 
