@@ -17,7 +17,7 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NuGet.Upload.Setup", "src\N
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Choco", "Choco", "{6B295E32-7D11-40D8-9A7E-C30F586B8855}"
 	ProjectSection(SolutionItems) = preProject
-		src\Nuget.Upload.Choco\Cornerstone.NuGetUpload.nuspec = src\Nuget.Upload.Choco\Cornerstone.NuGetUpload.nuspec
+		src\Nuget.Upload.Choco\nugetupload.nuspec = src\Nuget.Upload.Choco\nugetupload.nuspec
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{FC0DAFB0-BFB8-4D84-85B4-98199C46F100}"

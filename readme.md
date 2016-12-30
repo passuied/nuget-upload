@@ -74,3 +74,8 @@ PS> choco install nugetupload
 - `UploadRules`: an array of rules defining to which sub folder each package will be uploaded to. The order of rules matter as if a package was selected to go to a certain folder, it will not be picked to go to another folder event if the rule pattern matches its name!
   - `Pattern`: pattern associated with package name
   - `TargetFolder`: target upload sub folder
+
+# Change Log
+| Version | Summary 
+| ------- | ------- 
+| 1.0.0   | First stable version
