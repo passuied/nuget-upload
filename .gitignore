@@ -227,3 +227,4 @@ artifact/dist
 artifact/buildOutput
 logs/*.html
 logs/*.xml
+/artifact

@@ -207,9 +207,7 @@
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Nuget.Upload.nuspec" />
     <None Include="packages.config" />
-    <None Include="tools\chocolateyInstall.ps1" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
