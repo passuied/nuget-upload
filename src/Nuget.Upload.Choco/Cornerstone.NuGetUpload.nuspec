@@ -4,12 +4,12 @@
 -->
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">  
   <metadata>
-    <id>Nuget.Upload</id>
+    <id>Cornerstone.NuGetUpload</id>
     <version>$version$</version>
     <authors>Patrick Assuied</authors>
     <summary>Nuget Upload tool</summary>
     <description>A way to easily upload a given Nuget's dlls and dependencies to current location</description>
-    <!--<projectUrl>http://xunit.codeplex.com/</projectUrl>-->
+    <projectUrl>https://github.com/passuied/nuget-upload</projectUrl>
     <licenseUrl>https://www.cornerstoneondemand.com</licenseUrl>
     <tags>nuget upload monolith chocolatey</tags>
   <dependencies>
@@ -18,7 +18,7 @@
   </metadata>
   <files>
     <file src="tools\chocolateyInstall.ps1" target="tools"/>
-	  <!--<file src="tools\chocolateyUninstall.ps1" target="tools"/>-->
+	  <file src="tools\chocolateyUninstall.ps1" target="tools"/>
 	  <file src="..\..\artifact\NuGetUploadSetup.msi" target="tools"/>
   </files>
 </package>
