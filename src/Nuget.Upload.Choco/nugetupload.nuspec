@@ -7,7 +7,7 @@
     <id>nugetupload</id>
     <version>$version$</version>
     <authors>Patrick Assuied</authors>
-    <ownders>Patrick Assuied</ownders>
+    <owners>Patrick Assuied</owners>
     <title>NuGet Upload tool</title>
     <summary>NuGet Upload tool</summary>
     <description>A command line tool allowing easy upload of a given Nuget's and dependencies' dlls to current location and subfolders.</description>
