@@ -7,12 +7,12 @@
     <id>nugetupload</id>
     <version>$version$</version>
     <authors>Patrick Assuied</authors>
+    <ownders>Patrick Assuied</ownders>
     <title>NuGet Upload tool</title>
     <summary>NuGet Upload tool</summary>
     <description>A command line tool allowing easy upload of a given Nuget's and dependencies' dlls to current location and subfolders.</description>
     <projectUrl>https://github.com/passuied/nuget-upload</projectUrl>
     <packageSourceUrl>https://github.com/passuied/nuget-upload</packageSourceUrl>
-    <licenseUrl>https://www.cornerstoneondemand.com</licenseUrl>
     <tags>nuget upload dll monolith admin</tags>
     <releaseNotes>
       Documentation and release notes can be found at https://github.com/passuied/nuget-upload
@@ -23,7 +23,8 @@
   </metadata>
   <files>
     <file src="tools\chocolateyInstall.ps1" target="tools"/>
-	  <file src="tools\chocolateyUninstall.ps1" target="tools"/>
+    <file src="tools\chocolateyUninstall.ps1" target="tools"/>
+    <file src="tools\license.txt" target="tools"/>
 	  <file src="..\..\artifact\NuGetUploadSetup.msi" target="tools"/>
   </files>
 </package>
