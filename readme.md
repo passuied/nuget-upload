@@ -33,13 +33,7 @@ PS> choco install nugetupload
 ```
    * This will install the `nuget-upload` command line tool to the folder `%PROGRAMFILES(x86)%\Cornerstone\NuGetUpload`
    * It will also add this folder to the Environment `PATH` variable 
-2. Alternatively, since Chocolatey moderation system is taking a while, and version 1.0.0. is still under review at time of writing, you can also install it by doing the following:
-   * Clone this repo, and checkout the develop branch
-   * Open an admin powershell window
-   * Navigate to <Cloned Root>\Choco\
-```pshell
-PS> .\ChocoTest.ps1
-```
+
 
 ## Configuration
 - Default configuration can be overriden by editing the `appsettings.json` file located in the `%PROGRAMFILES(x86)%\Cornerstone\NuGetUpload` application folder
