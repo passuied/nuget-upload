@@ -44,6 +44,7 @@ PS> choco install nugetupload
     "TempFolder": "c:\\temp\\",
     "TargetFramework": "net452",
     "DeleteStagingFolder" :  true,
+    "ApplyRulesPerDllName": true,
     "UploadRules": [
       {
         "Pattern": "Cornerstone.Services.*",
@@ -79,4 +80,5 @@ PS> choco install nugetupload
 # Change Log
 | Version | Summary 
 | ------- | ------- 
+| 1.0.1   | Now supports applying rules per DLL file name instead of NuGet Package ID. enabled by default but can't be reverted by setting 'ApplyRulesPerDllName' to false.
 | 1.0.0   | First stable version
