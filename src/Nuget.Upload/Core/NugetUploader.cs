@@ -202,6 +202,55 @@ namespace Cornerstone.NuGet.Upload.Core
         private IDictionary<string, IEnumerable<string>> GetLibDllsbyTargetFolder(string stagingFolder)
         {
             var dllsByPackageId = GetLibDllsByPackageID(stagingFolder);
+
+            if (!this.Options.ApplyRulesPerDllName)
+            {
+                return ApplyRulesPerPackageId(dllsByPackageId);
+            }
+            else
+                return ApplyRulesPerDllName(dllsByPackageId);
+        }
+
+        private IDictionary<string, IEnumerable<string>> ApplyRulesPerDllName(IDictionary<string, IEnumerable<string>> dllsByPackageId)
+        {
+            var dllsByTargetFolder = new Dictionary<string, List<string>>();
+
+            // 1. flatten all Dlls
+            var flattenDlls = dllsByPackageId.SelectMany(kv => kv.Value).ToList();
+
+            // 2. Go to each rule
+            foreach (var rule in this.Options.UploadRules)
+            {
+                // 2.a Find matching Dlls
+                var matchingDlls = FindMatchingDlls(rule, flattenDlls);
+
+                // 2.b. Add matching dlls to dictionary
+                if (matchingDlls.Any())
+                {
+                    List<string> lstDlls;
+                    if (dllsByTargetFolder.ContainsKey(rule.TargetFolder))
+                        lstDlls = dllsByTargetFolder[rule.TargetFolder];
+                    else
+                    {
+                        lstDlls = new List<string>();
+                        dllsByTargetFolder.Add(rule.TargetFolder, lstDlls);
+
+                    }
+                    lstDlls.AddRange(matchingDlls);
+
+                    // 2.c Remove from original list
+                    matchingDlls.ToList().ForEach(l => flattenDlls.Remove(l));
+                }
+            }
+
+            // 3. Return dictionary
+            return dllsByTargetFolder.ToDictionary(kv => kv.Key, kv => kv.Value.AsEnumerable());
+        }
+
+       
+
+        private IDictionary<string, IEnumerable<string>> ApplyRulesPerPackageId(IDictionary<string, IEnumerable<string>> dllsByPackageId)
+        {
             var dllsByTargetFolder = new Dictionary<string, List<string>>();
             foreach (var rule in this.Options.UploadRules)
             {
@@ -243,6 +292,17 @@ namespace Cornerstone.NuGet.Upload.Core
 
             var matches = dllsByPackageId.Keys
                             .Where(k => regex.IsMatch(k))
+                            .ToArray();
+
+            return matches;
+        }
+
+        private IEnumerable<string> FindMatchingDlls(NuGetUploadRule rule, IEnumerable<string> dlls)
+        {
+            var regex = new Regex(WildcardToRegex(rule.Pattern));
+
+            var matches = dlls
+                            .Where(l => regex.IsMatch(GetFilename(l)))
                             .ToArray();
 
             return matches;
