@@ -12,7 +12,13 @@ Install-ChocolateyInstallPackage @packageArgs
 
 Remove-Item -Force $packageArgs.file
 
-$appFolder = "%PROGRAMFILES(X86)%\Cornerstone\NugetUpload"
+$programFiles = "%PROGRAMFILES(X86)%"
+if (Get-OSArchitectureWidth -Compare 32)
+{
+	$programFiles = "%PROGRAMFILES%"
+}
+	
+$appFolder = $programFiles +"\Cornerstone\NugetUpload"
 
 Install-ChocolateyPath -PathToInstall $appFolder -PathType 'Machine'
 
