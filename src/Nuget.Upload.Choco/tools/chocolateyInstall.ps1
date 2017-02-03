@@ -1,7 +1,7 @@
 $scriptPath =  $(Split-Path $MyInvocation.MyCommand.Path)
 
 $packageArgs = @{
-  packageName = 'Cornerstone.NuGetUpload'
+  packageName = 'nugetupload'
   softwareName   = 'NuGetUpload'
   fileType = 'msi'
   silentArgs = '/quiet'
@@ -12,13 +12,14 @@ Install-ChocolateyInstallPackage @packageArgs
 
 Remove-Item -Force $packageArgs.file
 
-$programFiles = "%PROGRAMFILES(X86)%"
+# Need to use hard-coded path as if using %PROGRAMFILES(X86)%, it keeps adding the entry to the path!
+$programFiles = "$env:systemdrive\Program Files (x86)"
 if (Get-OSArchitectureWidth -Compare 32)
 {
-	$programFiles = "%PROGRAMFILES%"
+	$programFiles = "$env:systemdrive\Program Files"
 }
 	
-$appFolder = $programFiles +"\Cornerstone\NugetUpload"
+$appFolder = "$programFiles\Cornerstone\NugetUpload"
 
 Install-ChocolateyPath -PathToInstall $appFolder -PathType 'Machine'
 

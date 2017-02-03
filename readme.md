@@ -80,5 +80,6 @@ PS> choco install nugetupload
 # Change Log
 | Version | Summary 
 | ------- | ------- 
+| 1.0.2   | Fixing a bug that would always add entry to PATH even if already there!
 | 1.0.1   | Now supports applying rules per DLL file name instead of NuGet Package ID. Enabled by default but can be reverted by setting 'ApplyRulesPerDllName' to false.
 | 1.0.0   | First stable version
