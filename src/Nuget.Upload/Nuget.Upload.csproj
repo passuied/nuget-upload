@@ -192,8 +192,8 @@
     <Compile Include="..\..\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Configuration\NuGetUploadOptions.cs" />
-    <Compile Include="Configuration\NuGetUploadRule.cs" />
+    <Compile Include="Configuration\NugetUploadOptions.cs" />
+    <Compile Include="Configuration\NugetUploadRule.cs" />
     <Compile Include="Core\MachineWideSettings.cs" />
     <Compile Include="Core\NuGetProjectContext.cs" />
     <Compile Include="Core\NugetUploader.cs" />
