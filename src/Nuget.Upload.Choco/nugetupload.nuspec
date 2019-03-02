@@ -18,7 +18,7 @@
       Documentation and release notes can be found at https://github.com/passuied/nuget-upload
     </releaseNotes>
   <dependencies>
-    <dependency id="nuget.commandline" version="3.4.3" />
+    <dependency id="nuget.commandline" version="4.9.3" />
   </dependencies>
   </metadata>
   <files>
