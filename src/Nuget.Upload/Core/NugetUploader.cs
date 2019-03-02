@@ -352,7 +352,7 @@ namespace Cornerstone.NuGet.Upload.Core
             p.StartInfo.FileName = "nuget.exe";
             p.StartInfo.WorkingDirectory = stagingFolder;
             var versionOption = !string.IsNullOrEmpty(packageVersionID) ? $" -Version {packageVersionID}" : string.Empty;
-            p.StartInfo.Arguments = $" install {packageID}{versionOption}";
+            p.StartInfo.Arguments = $" install {packageID}{versionOption} -Framework {Options.TargetFramework}";
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.RedirectStandardOutput = true;
             p.Start();
