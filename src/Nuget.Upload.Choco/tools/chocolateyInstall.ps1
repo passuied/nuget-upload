@@ -1,3 +1,5 @@
+$ErrorActionPreference = 'Stop';
+
 $scriptPath =  $(Split-Path $MyInvocation.MyCommand.Path)
 
 $packageArgs = @{

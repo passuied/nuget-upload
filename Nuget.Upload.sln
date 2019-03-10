@@ -24,8 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{FC0DAFB0
 	ProjectSection(SolutionItems) = preProject
 		src\Nuget.Upload.Choco\tools\chocolateyInstall.ps1 = src\Nuget.Upload.Choco\tools\chocolateyInstall.ps1
 		src\Nuget.Upload.Choco\tools\chocolateyUninstall.ps1 = src\Nuget.Upload.Choco\tools\chocolateyUninstall.ps1
-		license.txt = license.txt
-		VERIFICATION.txt = VERIFICATION.txt
+		src\Nuget.Upload.Choco\tools\license.txt = src\Nuget.Upload.Choco\tools\license.txt
+		src\Nuget.Upload.Choco\tools\VERIFICATION.txt = src\Nuget.Upload.Choco\tools\VERIFICATION.txt
 	EndProjectSection
 EndProject
 Global
